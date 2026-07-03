@@ -14,6 +14,7 @@
                         'marquee': 'marquee 25s linear infinite',
                         'blob': 'blob 12s infinite',
                         'fade-in-up': 'fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'shimmer': 'shimmer 2.5s infinite linear',
                     },
                     keyframes: {
                         marquee: {
@@ -28,6 +29,10 @@
                         fadeInUp: {
                             '0%': { opacity: '0', transform: 'translateY(30px)', filter: 'blur(10px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)', filter: 'blur(0)' }
+                        },
+                        shimmer: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
                         }
                     }
                 }
@@ -51,7 +56,7 @@
             box-shadow: 0 30px 60px -20px rgba(16, 185, 129, 0.15);
         }
 
-        /* --- NUEVO MOTOR DE ANIMACIÓN INTERSECTION OBSERVER (100% MÓVIL COMPATIBLE) --- */
+        /* --- MOTOR DE ANIMACIÓN INTERSECTION OBSERVER COMPATIBLE --- */
         .scroll-reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -68,15 +73,27 @@
             filter: blur(0);
         }
 
-        /* Parallax sutil optimizado para rendimiento móvil */
-        .img-container {
+        .img-container { overflow: hidden; }
+        .img-parallax { transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .img-container:hover .img-parallax { transform: scale(1.05) translateY(-5px); }
+
+        /* --- EFECTO WOW CROMÁTICO PARA PRODUCTOS --- */
+        .product-premium-card {
+            position: relative;
             overflow: hidden;
         }
-        .img-parallax {
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        .product-premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: none;
+            pointer-events: none;
         }
-        .img-container:hover .img-parallax {
-            transform: scale(1.05) translateY(-5px);
+        .product-premium-card:hover::before {
+            transform: translateX(100%);
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
     </style>
 </head>
@@ -104,7 +121,7 @@
             
             <div class="hidden md:flex space-x-8 text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 <button onclick="navigateTo('home')" id="nav-home" class="nav-active hover:text-zinc-900 dark:hover:text-white transition-colors">Inicio</button>
-                <button onclick="navigateTo('store')" id="nav-store" class="hover:text-zinc-900 dark:hover:text-white transition-colors">Productos</button>
+                <button onclick="navigateTo('store')" id="nav-store" class="hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1">Productos <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span></button>
                 <button onclick="navigateTo('about')" id="nav-about" class="hover:text-zinc-900 dark:hover:text-white transition-colors">Sobre Nosotros</button>
                 <button onclick="navigateTo('contact')" id="nav-contact" class="hover:text-zinc-900 dark:hover:text-white transition-colors">Contacto</button>
             </div>
@@ -128,7 +145,7 @@
 
         <div id="mobile-menu" class="hidden md:hidden border-b border-zinc-100 dark:border-zinc-900 bg-[#FAFAFA] dark:bg-zinc-950 px-6 py-4 space-y-3 font-medium text-sm">
             <button onclick="navigateTo('home'); toggleMobileMenu();" class="block w-full text-left py-2 text-zinc-600 dark:text-zinc-400">Inicio</button>
-            <button onclick="navigateTo('store'); toggleMobileMenu();" class="block w-full text-left py-2 text-zinc-600 dark:text-zinc-400">Productos</button>
+            <button onclick="navigateTo('store'); toggleMobileMenu();" class="block w-full text-left py-2 text-zinc-600 dark:text-zinc-400 flex items-center gap-2">Productos <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span></button>
             <button onclick="navigateTo('about'); toggleMobileMenu();" class="block w-full text-left py-2 text-zinc-600 dark:text-zinc-400">Sobre Nosotros</button>
             <button onclick="navigateTo('contact'); toggleMobileMenu();" class="block w-full text-left py-2 text-zinc-600 dark:text-zinc-400">Contacto</button>
         </div>
@@ -195,17 +212,17 @@
 
             <header class="min-h-[85vh] flex flex-col justify-center md:grid md:grid-cols-12 border-b border-zinc-100 dark:border-zinc-900/60 relative z-10 px-4 sm:px-6">
                 <div class="md:col-span-7 flex flex-col justify-center py-12 space-y-6 md:space-y-8">
-                    <span class="text-[10px] md:text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/20 px-3 py-1 rounded-full w-max">
+                    <span class="scroll-reveal text-[10px] md:text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/20 px-3 py-1 rounded-full w-max">
                         Potencia tu bienestar
                     </span>
-                    <h1 class="text-5xl sm:text-6xl md:text-8xl font-extralight tracking-tight text-zinc-900 dark:text-white leading-tight md:leading-none">
+                    <h1 class="scroll-reveal text-5xl sm:text-6xl md:text-8xl font-extralight tracking-tight text-zinc-900 dark:text-white leading-tight md:leading-none">
                         Nutrición<br>sin ruido.<br>
                         <span class="font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-zinc-400 bg-clip-text text-transparent">Poder real.</span>
                     </h1>
-                    <p class="text-zinc-500 dark:text-zinc-400 text-base md:text-lg max-w-md font-light leading-relaxed">
+                    <p class="scroll-reveal text-zinc-500 dark:text-zinc-400 text-base md:text-lg max-w-md font-light leading-relaxed">
                         Redefinimos los alimentos eliminando lo químico y exaltando lo puro. Tu rendimiento elevado de forma consciente.
                     </p>
-                    <div>
+                    <div class="scroll-reveal">
                         <button onclick="navigateTo('store')" class="group relative w-full sm:w-auto justify-center bg-zinc-900 dark:bg-white hover:bg-emerald-600 dark:hover:bg-emerald-500 text-white dark:text-zinc-950 hover:text-white dark:hover:text-white text-sm px-8 py-4 rounded-full active:scale-95 transition-all duration-300 font-medium flex items-center space-x-3 shadow-xl overflow-hidden">
                             <div class="absolute inset-0 w-full h-full bg-emerald-400/20 blur-md rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-300"></div>
                             <span class="relative z-10">Explorar Catálogo</span>
@@ -213,21 +230,21 @@
                         </button>
                     </div>
                 </div>
-                <div class="md:col-span-5 flex items-center justify-center pb-12 md:py-12">
+                <div class="md:col-span-5 flex items-center justify-center pb-12 md:py-12 scroll-reveal">
                     <div class="w-full h-72 md:h-[500px] rounded-[2.5rem] overflow-hidden shadow-2xl relative border border-zinc-300 dark:border-zinc-800 cursor-pointer group img-container">
                         <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80&w=800" alt="Lifestyle" class="object-cover w-full h-full filter brightness-95 img-parallax">
                     </div>
                 </div>
             </header>
 
-            <section class="scroll-reveal max-w-7xl mx-auto px-4 sm:px-6 py-24 space-y-16">
-                <div class="max-w-xl space-y-2">
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 py-24 space-y-16">
+                <div class="max-w-xl space-y-2 scroll-reveal">
                     <span class="text-xs uppercase tracking-widest text-emerald-500 font-semibold">• Pureza Estructural</span>
                     <h2 class="text-3xl md:text-5xl font-light text-zinc-900 dark:text-white tracking-tight">Fórmulas interactivas creadas para impactar de verdad.</h2>
                 </div>
 
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-8 space-y-4 interactive-glow flex flex-col justify-between min-h-[280px]">
+                    <div class="scroll-reveal bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-8 space-y-4 interactive-glow flex flex-col justify-between min-h-[280px]">
                         <div class="space-y-4">
                             <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl flex items-center justify-center text-emerald-500">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
@@ -238,11 +255,10 @@
                         <span class="text-xs text-emerald-500 font-medium tracking-wider">Eficiencia Biológica →</span>
                     </div>
 
-                    <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-8 space-y-4 interactive-glow flex flex-col justify-between min-h-[280px]">
+                    <div class="scroll-reveal bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-8 space-y-4 interactive-glow flex flex-col justify-between min-h-[280px]">
                         <div class="space-y-4">
                             <div class="w-12 h-12 bg-teal-50 dark:bg-teal-950/20 rounded-2xl flex items-center justify-center text-teal-500">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 00.906 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"></path>
-                                </svg>
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 00.906 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"></path></svg>
                             </div>
                             <h3 class="text-xl font-medium text-zinc-900 dark:text-white">Trazabilidad de Origen</h3>
                             <p class="text-zinc-500 dark:text-zinc-400 text-xs font-light leading-relaxed">Materia prima certificada. Sabes exactamente de dónde viene cada ingrediente, libre de rellenos comerciales.</p>
@@ -250,7 +266,7 @@
                         <span class="text-xs text-teal-500 font-medium tracking-wider">100% Transparente →</span>
                     </div>
 
-                    <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-8 space-y-4 interactive-glow flex flex-col justify-between min-h-[280px]">
+                    <div class="scroll-reveal bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-8 space-y-4 interactive-glow flex flex-col justify-between min-h-[280px]">
                         <div class="space-y-4">
                             <div class="w-12 h-12 bg-amber-50 dark:bg-amber-950/20 rounded-2xl flex items-center justify-center text-amber-500">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -263,15 +279,15 @@
                 </div>
             </section>
 
-            <section class="scroll-reveal max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-zinc-200/60 dark:border-zinc-900/60">
-                <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 grid md:grid-cols-12 gap-8 items-center border border-zinc-500/10 dark:border-zinc-800/50">
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-zinc-200/60 dark:border-zinc-900/60">
+                <div class="scroll-reveal bg-white/40 dark:bg-black/30 backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 grid md:grid-cols-12 gap-8 items-center border border-zinc-500/10 dark:border-zinc-800/50">
                     <div class="md:col-span-7 space-y-4">
                         <span class="text-[10px] md:text-xs uppercase tracking-widest text-teal-600 dark:text-teal-400 font-bold bg-teal-50 dark:bg-teal-950/20 px-3 py-1 rounded-full w-max inline-block">
                             Impacto Circular Consciente
                         </span>
                         <h2 class="text-2xl md:text-4xl font-light text-zinc-900 dark:text-white tracking-tight">Compromiso Cero Plásticos</h2>
                         <p class="text-zinc-500 dark:text-zinc-400 text-xs md:text-sm font-light leading-relaxed max-w-xl">
-                            Cada envase de <strong class="font-medium text-zinc-900 dark:text-white">Vitalcer</strong> es fabricado mediante polímeros compostables de origen vegetal. Al terminar tu ciclo de suplementación, el empaque se degrada sin dejar residuos tóxicos ni microplásticos, protegiendo tu ecosistema tal como proteges tu salud.
+                            Cada envase de <strong>Vitalcer</strong> es fabricado mediante polímeros compostables de origen vegetal. Al terminar tu ciclo de suplementación, el empaque se degrada sin dejar residuos tóxicos ni microplásticos.
                         </p>
                     </div>
                     <div class="md:col-span-5 h-48 md:h-64 rounded-2xl overflow-hidden shadow-lg border border-zinc-300 dark:border-zinc-800 cursor-pointer group img-container">
@@ -280,8 +296,8 @@
                 </div>
             </section>
 
-            <section class="scroll-reveal max-w-7xl mx-auto px-4 sm:px-6 py-12">
-                <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 grid md:grid-cols-12 gap-8 items-center border border-zinc-500/10 dark:border-zinc-800/50">
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+                <div class="scroll-reveal bg-white/40 dark:bg-black/30 backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 grid md:grid-cols-12 gap-8 items-center border border-zinc-500/10 dark:border-zinc-800/50">
                     <div class="md:col-span-5 h-48 md:h-64 rounded-2xl overflow-hidden shadow-lg border border-zinc-300 dark:border-zinc-800 cursor-pointer group order-last md:order-first img-container">
                         <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=600" alt="Preservación Bioactiva" class="w-full h-full object-cover img-parallax">
                     </div>
@@ -291,14 +307,14 @@
                         </span>
                         <h2 class="text-2xl md:text-4xl font-light text-zinc-900 dark:text-white tracking-tight">Preservación Bioactiva Hermética</h2>
                         <p class="text-zinc-500 dark:text-zinc-400 text-xs md:text-sm font-light leading-relaxed max-w-xl">
-                            Nuestros compuestos moleculares se envasan bajo atmósfera protectora controlada de nitrógeno molecular. Esto aísla por completo los nutrientes de la humedad ambiente y de la oxidación por luz UV, garantizando que el <strong class="font-medium text-zinc-900 dark:text-white">100% de la pureza estructural</strong> y las enzimas digestivas activas se mantengan intactas desde el laboratorio hasta tu vaso shaker.
+                            Nuestros compuestos moleculares se envasan bajo atmósfera protectora controlada de nitrógeno molecular para evitar por completo la oxidación UV.
                         </p>
                     </div>
                 </div>
             </section>
 
-            <section class="scroll-reveal max-w-7xl mx-auto px-4 sm:px-6 py-20 border-t border-zinc-200/60 dark:border-zinc-900/60">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12">
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 py-20 border-t border-zinc-200/60 dark:border-zinc-900/60">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12 scroll-reveal">
                     <div>
                         <span class="text-xs uppercase tracking-widest text-emerald-500 font-bold">• Línea de Élite</span>
                         <h2 class="text-3xl md:text-5xl font-light text-zinc-900 dark:text-white tracking-tight mt-1">Los más elegidos de la semana</h2>
@@ -310,7 +326,7 @@
                 </div>
 
                 <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-                    <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-5 flex flex-col justify-between interactive-glow cursor-pointer group" onclick="navigateTo('store')">
+                    <div class="scroll-reveal bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-5 flex flex-col justify-between interactive-glow cursor-pointer group" onclick="navigateTo('store')">
                         <div class="bg-zinc-50 dark:bg-black/40 rounded-2xl p-6 aspect-square flex items-center justify-center mb-4 relative overflow-hidden border border-zinc-100 dark:border-transparent">
                             <span class="absolute top-3 left-3 bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full shadow z-10">Best Seller</span>
                             <img src="https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&q=80&w=400" class="max-h-full object-contain transition-transform duration-500 group-hover:scale-110">
@@ -321,7 +337,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-5 flex flex-col justify-between interactive-glow cursor-pointer group" onclick="navigateTo('store')">
+                    <div class="scroll-reveal bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-5 flex flex-col justify-between interactive-glow cursor-pointer group" onclick="navigateTo('store')">
                         <div class="bg-zinc-50 dark:bg-black/40 rounded-2xl p-6 aspect-square flex items-center justify-center mb-4 relative overflow-hidden border border-zinc-100 dark:border-transparent">
                             <span class="absolute top-3 left-3 bg-emerald-500 text-white text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full shadow z-10">Keto Master</span>
                             <img src="https://images.unsplash.com/photo-1546421845-6471bdcf3edf?auto=format&fit=crop&q=80&w=400" class="max-h-full object-contain transition-transform duration-500 group-hover:scale-110">
@@ -332,7 +348,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-5 flex flex-col justify-between interactive-glow cursor-pointer group" onclick="navigateTo('store')">
+                    <div class="scroll-reveal bg-white/40 dark:bg-black/30 backdrop-blur-md border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] p-5 flex flex-col justify-between interactive-glow cursor-pointer group" onclick="navigateTo('store')">
                         <div class="bg-zinc-50 dark:bg-black/40 rounded-2xl p-6 aspect-square flex items-center justify-center mb-4 relative overflow-hidden border border-zinc-100 dark:border-transparent">
                             <span class="absolute top-3 left-3 bg-teal-500 text-white text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full shadow z-10">Recuperación</span>
                             <img src="https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&q=80&w=400" class="max-h-full object-contain transition-transform duration-500 group-hover:scale-110">
@@ -347,10 +363,13 @@
         </div>
 
         <div id="view-store" class="view-section hidden opacity-0 transition-all duration-300 max-w-7xl mx-auto px-4 sm:px-6 py-8">
-            <div class="flex flex-col space-y-4 border-b border-zinc-200 dark:border-zinc-800/60 pb-6 mb-6">
+            <div class="flex flex-col space-y-4 border-b border-zinc-200 dark:border-zinc-800/60 pb-6 mb-6 scroll-reveal">
                 <div>
                     <span class="text-xs text-zinc-400 uppercase tracking-widest">Catálogo</span>
-                    <h1 class="text-3xl font-light text-zinc-900 dark:text-white mt-0.5">Nuestros Productos</h1>
+                    <h1 class="text-3xl font-light text-zinc-900 dark:text-white mt-0.5 flex items-center gap-2">
+                        Nuestros Productos 
+                        <span class="text-xs font-semibold px-2.5 py-0.5 bg-emerald-500/10 text-emerald-500 rounded-full animate-pulse">Efecto Aero Activo</span>
+                    </h1>
                     <p class="text-[11px] text-emerald-500 mt-1 font-medium">💡 Asegurate que es lo que necesitas para tu cuerpo.</p>
                 </div>
                 <div>
@@ -359,7 +378,7 @@
                 </div>
             </div>
 
-            <div class="flex overflow-x-auto pb-3 gap-2 scrollbar-none mb-8">
+            <div class="flex overflow-x-auto pb-3 gap-2 scrollbar-none mb-8 scroll-reveal">
                 <button onclick="filterTag('Todos')" id="tag-Todos" class="tag-active px-5 py-2.5 rounded-full text-xs font-semibold border border-zinc-200 dark:border-zinc-800 uppercase tracking-wide shrink-0">Todos</button>
                 <button onclick="filterTag('Vegano')" id="tag-Vegano" class="bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 px-5 py-2.5 rounded-full text-xs font-semibold border border-zinc-200 dark:border-zinc-800 uppercase tracking-wide shrink-0">Vegano</button>
                 <button onclick="filterTag('Proteico')" id="tag-Proteico" class="bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 px-5 py-2.5 rounded-full text-xs font-semibold border border-zinc-200 dark:border-zinc-800 uppercase tracking-wide shrink-0">Proteico</button>
@@ -371,7 +390,7 @@
         </div>
 
         <div id="view-about" class="view-section hidden opacity-0 transition-all duration-300 max-w-5xl mx-auto px-4 sm:px-6 py-16 space-y-20">
-            <div class="text-center space-y-4 max-w-2xl mx-auto">
+            <div class="text-center space-y-4 max-w-2xl mx-auto scroll-reveal">
                 <span class="text-xs uppercase tracking-widest text-emerald-500 font-bold bg-emerald-500/10 px-4 py-1.5 rounded-full">Nuestro Manifiesto</span>
                 <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tighter text-zinc-900 dark:text-white leading-none">
                     HACER TODO ESO ES SER <br><span class="bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">VITALCER.</span>
@@ -384,18 +403,18 @@
                     <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md p-8 rounded-[2rem] border border-zinc-500/10 dark:border-zinc-800/50 shadow-xl space-y-3 scroll-reveal">
                         <span class="text-3xl font-bold text-emerald-500">01</span>
                         <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Filosofía Limpia</h3>
-                        <p class="text-zinc-500 dark:text-zinc-400 text-xs font-light leading-relaxed">No añadimos rellenos comerciales, ni gomas, ni azúcares encubiertos. Si un ingrediente no aporta valor real, se descarta.</p>
+                        <p class="text-zinc-500 dark:text-zinc-400 text-xs font-light leading-relaxed">No añadimos rellenos comerciales ni gomas sintéticas.</p>
                     </div>
                     <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md p-8 rounded-[2rem] border border-zinc-500/10 dark:border-zinc-800/50 shadow-xl space-y-3 scroll-reveal">
                         <span class="text-3xl font-bold text-teal-500">02</span>
                         <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Ciencia Vegetal Elevada</h3>
-                        <p class="text-zinc-500 dark:text-zinc-400 text-xs font-light leading-relaxed">Buscamos el maximum rendimiento biológico apoyados en los últimos avances de ingeniería alimentaria limpia.</p>
+                        <p class="text-zinc-500 dark:text-zinc-400 text-xs font-light leading-relaxed">Buscamos el máximo rendimiento biológico con ingeniería limpia.</p>
                     </div>
                 </div>
                 <div class="md:col-span-7 h-96 md:h-[500px] rounded-[3rem] overflow-hidden border border-zinc-200 dark:border-zinc-800/60 relative shadow-2xl group cursor-pointer img-container scroll-reveal">
                     <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&q=80&w=1000" alt="Naturaleza" class="object-cover w-full h-full img-parallax">
                     <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent p-8 flex items-end">
-                        <p class="text-white text-lg font-light max-w-sm"><strong class="font-semibold text-emerald-400">Vitalcer</strong> es el resultado de un compromiso inquebrantable con la salud de alta gama.</p>
+                        <p class="text-white text-lg font-light max-w-sm"><strong class="font-semibold text-emerald-400">Vitalcer</strong> es el resultado de un compromiso inquebrantable.</p>
                     </div>
                 </div>
             </div>
@@ -405,15 +424,10 @@
             <div class="bg-white/50 backdrop-blur-md dark:bg-black/30 rounded-[2.5rem] p-8 md:p-16 grid md:grid-cols-12 gap-12 items-center border border-zinc-500/10 dark:border-zinc-800/50 shadow-2xl relative overflow-hidden transition-colors duration-500">
                 <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
 
-                <div class="md:col-span-5 space-y-6 relative z-10">
+                <div class="md:col-span-5 space-y-6 relative z-10 scroll-reveal">
                     <span class="text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/20 px-3 py-1 rounded-full border border-emerald-200/40 dark:border-emerald-800/40 w-max inline-block">Contáctanos!</span>
                     <h2 class="text-4xl md:text-6xl font-extrabold text-zinc-900 dark:text-white tracking-tighter leading-none">¿Listo para <br>el cambio?</h2>
-                    <p class="text-zinc-500 dark:text-zinc-400 font-light text-sm leading-relaxed max-w-xs">Escribinos. Nuestro equipo especializado te guiará para armar el combo de suplementación perfecto para tus metas.</p>
-                    
-                    <div class="space-y-3 pt-4 text-xs font-mono text-zinc-400 dark:text-zinc-500">
-                        <p class="flex items-center space-x-2"><span class="text-emerald-500 dark:text-emerald-400">●</span> <span class="text-zinc-700 dark:text-zinc-400">Soporte: info@vitalcer.bio</span></p>
-                        <p class="flex items-center space-x-2"><span class="text-teal-500 dark:text-teal-400">●</span> <span class="text-zinc-700 dark:text-zinc-400">Salta, Argentina</span></p>
-                    </div>
+                    <p class="text-zinc-500 dark:text-zinc-400 font-light text-sm leading-relaxed max-w-xs">Escribinos. Nuestro equipo especializado te guiará para armar tu combo de suplementación perfecto.</p>
                 </div>
                 
                 <div class="md:col-span-7 relative z-10 scroll-reveal">
@@ -462,19 +476,54 @@
 
         let cart = [];
         let currentTag = "Todos";
+        let audioCtx = null;
 
-        /* --- MOTOR JS PARA ANIMACIONES SCROLL REVEAL EN MÓVIL --- */
+        /* --- SINTETIZADOR DE AUDIO NATIVO PARA EFECTO WOW --- */
+        function playWowSound() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                // Frecuencia inicial baja que sube sutilmente simulando aire o velocidad aeroespacial de lujo
+                osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(320, audioCtx.currentTime + 0.4);
+
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } catch (e) {
+                console.log("Audio Bloqueado por políticas del navegador hasta interacción.");
+            }
+        }
+
+        /* --- REVEAL INTERSECTION OBSERVER RE-OPTIMIZADO --- */
         function initScrollAnimations() {
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
-                threshold: 0.12 // Se activa cuando el 12% del elemento es visible
+                threshold: 0.08
             };
 
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
+                entries.forEach((entry, index) => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
+                        // Delay dinámico en cascada para romper la linealidad aburrida
+                        setTimeout(() => {
+                            entry.target.classList.add('revealed');
+                        }, index * 60);
                     }
                 });
             }, observerOptions);
@@ -482,7 +531,6 @@
             document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
         }
 
-        // Ejecutar al cargar la página
         document.addEventListener("DOMContentLoaded", () => {
             initScrollAnimations();
         });
@@ -599,9 +647,15 @@
             const target = document.getElementById(`view-${viewId}`);
             target.classList.remove('hidden');
             target.classList.add('block');
+            
+            // --- IMPACTO WOW CUANDO ENTRA A PRODUCTOS ---
+            if (viewId === 'store') {
+                playWowSound();
+                renderProducts();
+            }
+
             setTimeout(() => { 
                 target.classList.add('opacity-100'); 
-                // Reiniciar y re-escuchar animaciones al cambiar de vista dinámica
                 initScrollAnimations();
             }, 50);
 
@@ -610,7 +664,6 @@
             if(currentNav) currentNav.classList.add('nav-active');
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            if (viewId === 'store') renderProducts();
         }
 
         function renderProducts() {
@@ -630,9 +683,10 @@
                 return;
             }
 
-            filtered.forEach(p => {
+            filtered.forEach((p) => {
+                // Notar que inyectamos dinámicamente la clase scroll-reveal y las clases premium
                 grid.innerHTML += `
-                    <div class="bg-white/40 dark:bg-black/30 backdrop-blur-md p-4 border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] flex flex-col justify-between cursor-pointer interactive-glow" onclick="openProductModal(${p.id})">
+                    <div class="scroll-reveal product-premium-card bg-white/40 dark:bg-black/30 backdrop-blur-md p-4 border border-zinc-500/10 dark:border-zinc-800/50 rounded-[2rem] flex flex-col justify-between cursor-pointer interactive-glow" onclick="openProductModal(${p.id})">
                         <div>
                             <div class="bg-zinc-50 dark:bg-black/40 rounded-xl aspect-square flex items-center justify-center p-6 overflow-hidden mb-4 border border-zinc-100 dark:border-transparent">
                                 <img src="${p.img}" class="max-h-full object-contain filter dark:brightness-95">
@@ -653,10 +707,14 @@
                     </div>
                 `;
             });
+            
+            // Forzar al observer a registrar las nuevas tarjetas agregadas dinámicamente
+            initScrollAnimations();
         }
 
         function filterTag(tag) {
             currentTag = tag;
+            playWowSound(); // Disparar micro-feedback acústico al cambiar de categoría
             document.querySelectorAll('[id^="tag-"]').forEach(btn => btn.classList.remove('tag-active', 'bg-white', 'text-zinc-600', 'dark:bg-zinc-900', 'dark:text-zinc-400'));
             document.querySelectorAll('[id^="tag-"]').forEach(btn => {
                 if (btn.id === `tag-${tag}`) btn.classList.add('tag-active');
